@@ -4,6 +4,4 @@ numpy
 matplotlib 
 plotly 
 streamlit 
-requests 
-os 
-io
+requests
