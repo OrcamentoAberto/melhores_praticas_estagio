@@ -1,2 +1,9 @@
-geopandas
-plotly
+pandas
+geopandas  
+numpy  
+matplotlib 
+plotly 
+streamlit 
+requests 
+os 
+io
