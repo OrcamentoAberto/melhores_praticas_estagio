@@ -27,7 +27,7 @@ def funcao_merge_dados(
     warnings.filterwarnings("ignore", category = UserWarning)
     warnings.filterwarnings("ignore", category = RuntimeWarning)
 
-    save_shp(gdf_merged, "gdf_merged.shp")
+    #save_shp(gdf_merged, "gdf_merged.shp")
 
     return gdf_merged
 
@@ -56,5 +56,6 @@ def caregar_dados_plusmerge_teste(
     warnings.filterwarnings("ignore", category = RuntimeWarning)
 
     save_shp(gdf_merged, "gdf_merged.shp")
+
 
     return df_ppa_reg, gdf_subprefs, gdf_merged
