@@ -8,6 +8,7 @@ import plotly.express as px
 import numpy as np
 from utils.load_csv import load_csv
 from utils.load_shp import load_shp
+from utils.merge_dados_06 import funcao_merge_dados, caregar_dados_plusmerge_teste
  
 # Layout
 st.set_page_config(layout = "wide")
@@ -23,60 +24,60 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # Sidebar
-with st.sidebar:
+with st.container(key='minhaSidebar'):
+    with st.sidebar:
 
-    st.markdown("<h3 style='color: white;'>Sobre</h3>", unsafe_allow_html = True)
-
-    st.markdown("""<div style = 'text-align: justify; color: white;' >
-                    Esse é o Dashboard do Orçamento Aberto, projeto inscrito no 14º Prêmio Melhores Práticas de Estágio da Prefeitura Municipal de São Paulo.
-                    As visualizações mostram o planejamento orçamentário do município de 2022 até 2025.
-                    </div> <br>""",
-                    unsafe_allow_html = True)
-
-    with st.expander("Metodologia"):
+        st.markdown("<h3 style='color: white;'>Sobre</h3>", unsafe_allow_html = True)
 
         st.markdown("""<div style = 'text-align: justify; color: white;' >
-                    Este dashboard foi desenvolvido com a biblioteca Streamlit, utilizando a linguagem Python. 
-                    A extração e o tratamento dos dados foram realizados com o apoio das bibliotecas Pandas e GeoPandas, 
-                    a partir de três bases de dados principais: os dados do Plano Plurianual (PPA) 2022 - 2025 por fonte de recurso e por regionalização, 
-                    obtidos no portal do orçamento da Prefeitura Municipal de São Paulo, e os limites administrativos das subprefeituras, extraídos do projeto GeoSampa. 
-                    O processo de tratamento incluiu a padronização e agregação dos dados orçamentários por subprefeitura, 
-                    possibilitando sua posterior com os polígonos georreferenciados. 
-                    As visualizações interativas: mapas coropléticos e gráficos de rosca, foram elaboradas com a biblioteca Plotly, permitindo a exploração dinâmica dos dados e 
-                    facilitando a análise da distribuição territorial dos orçamento público regionalizável.
-                    </div> <br>""",
-                    unsafe_allow_html = True)
-        
-    with st.expander("Fonte"):
+                        Esse é o Dashboard do Orçamento Aberto, projeto inscrito no 14º Prêmio Melhores Práticas de Estágio da Prefeitura Municipal de São Paulo.
+                        As visualizações mostram o planejamento orçamentário do município de 2022 até 2025.
+                        </div> <br>""",
+                        unsafe_allow_html = True)
+        with st.container(key='conteudo-sidebar'):
+            with st.expander("Metodologia"):
 
-        st.markdown("""<div style = 'text-align: justify; color: white;' >
-                    Os dados são do PPA (2022 - 2025) e foram extraídos
-                    do site do orçamento da PMSP.
-                    </div>""",
-                    unsafe_allow_html = True)
+                st.markdown("""<div style = 'text-align: justify; color: white;' >
+                            Este dashboard foi desenvolvido com a biblioteca Streamlit, utilizando a linguagem Python. 
+                            A extração e o tratamento dos dados foram realizados com o apoio das bibliotecas Pandas e GeoPandas, 
+                            a partir de três bases de dados principais: os dados do Plano Plurianual (PPA) 2022 - 2025 por fonte de recurso e por regionalização, 
+                            obtidos no portal do orçamento da Prefeitura Municipal de São Paulo, e os limites administrativos das subprefeituras, extraídos do projeto GeoSampa. 
+                            O processo de tratamento incluiu a padronização e agregação dos dados orçamentários por subprefeitura, 
+                            possibilitando sua posterior com os polígonos georreferenciados. 
+                            As visualizações interativas: mapas coropléticos e gráficos de rosca, foram elaboradas com a biblioteca Plotly, permitindo a exploração dinâmica dos dados e 
+                            facilitando a análise da distribuição territorial dos orçamento público regionalizável.
+                            </div> <br>""",
+                            unsafe_allow_html = True)
+                
+            with st.expander("Fonte"):
 
-import streamlit as st
+                st.markdown("""<div style = 'text-align: justify; color: white;' >
+                            Os dados são do PPA (2022 - 2025) e foram extraídos
+                            do site do orçamento da PMSP.
+                            </div>""",
+                            unsafe_allow_html = True)
 
-st.sidebar.markdown(
-    """
-    <a href="https://www.figma.com/proto/oJOJAmPbrWnvOKqxZfexhO/Or%C3%A7amento-Aberto-%7C-Melhores-Pr%C3%A1ticas-de-Est%C3%A1gio?page-id=0%3A1&node-id=101-18&viewport=247%2C368%2C0.04&t=uhXePc1EAPYBx3VI-1&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=210%3A474" 
-       target="_blank">
-        <button style="
-            background-color: #F1EBDD;
-            color: black;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-        ">
-            Acesse o site
-        </button>
-    </a>
-    """,
-    unsafe_allow_html=True
-)
+
+    st.sidebar.markdown(
+        """
+        <a href="https://www.figma.com/proto/oJOJAmPbrWnvOKqxZfexhO/Or%C3%A7amento-Aberto-%7C-Melhores-Pr%C3%A1ticas-de-Est%C3%A1gio?page-id=0%3A1&node-id=101-18&viewport=247%2C368%2C0.04&t=uhXePc1EAPYBx3VI-1&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=210%3A474" 
+        target="_blank">
+            <button style="
+                background-color: #F1EBDD;
+                color: black;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 16px;
+                width: 100%;
+            ">
+                Acesse o site
+            </button>
+        </a>
+        """,
+        unsafe_allow_html=True
+    )
 
 #4CAF50
 
@@ -89,7 +90,7 @@ def carregar_dados():
  
     gdf_subprefs = load_shp("subprefs.shp")
  
-    gdf_merged = load_shp("gdf_merged.shp")
+    gdf_merged = funcao_merge_dados() #gdf_merged = load_shp("gdf_merged.shp") 
  
     return df_ppa_reg, gdf_subprefs, gdf_merged
  
@@ -298,16 +299,16 @@ with st.container(key='conteudoPrincipal'):
 
     df["valor_total"] = df[colunas_valores].sum(axis = 1)
 
-    df_total = df[["nm_subpref", "descrica_2", "valor_total", "geometry"]].copy()
+    df_total = df[["nm_subpref", "descricao da funcao", "valor_total", "geometry"]].copy()
 
-    top_funcoes = (df_total.groupby("descrica_2")[["valor_total"]]
+    top_funcoes = (df_total.groupby("descricao da funcao")[["valor_total"]]
                 .sum()
                 .reset_index()
                 .sort_values("valor_total", ascending=False)
-                .head(3)["descrica_2"]
+                .head(3)["descricao da funcao"]
                 .tolist())
 
-    df_top3 = df_total[df_total["descrica_2"].isin(top_funcoes)]
+    df_top3 = df_total[df_total["descricao da funcao"].isin(top_funcoes)]
 
     escalas_colorbar = {"Educação": (0, 5.6e9),
                         "Assistência Social": (0, 1.0e9),
@@ -328,7 +329,7 @@ with st.container(key='conteudoPrincipal'):
 
         with tab:
 
-            gdf_funcao = df_top3[df_top3["descrica_2"] == funcao]
+            gdf_funcao = df_top3[df_top3["descricao da funcao"] == funcao]
 
             gdf_funcao = gdf_funcao.groupby(["nm_subpref", "geometry"]).sum(numeric_only = True).reset_index()
 
@@ -391,7 +392,7 @@ with st.container(key='conteudoPrincipal'):
 
         df_funcoes["valor_total"] = df_funcoes[[f"valor {ano}" for ano in anos_selecionados]].sum(axis = 1)
 
-        df_funcoes_grouped = (df_funcoes.groupby("descrica_2")[["valor_total"]]
+        df_funcoes_grouped = (df_funcoes.groupby("descricao da funcao")[["valor_total"]]
                             .sum()
                             .sort_values("valor_total", ascending = False)
                             .reset_index()
@@ -399,8 +400,8 @@ with st.container(key='conteudoPrincipal'):
 
         df_funcoes_grouped["Valor regionalizável orçado"] = df_funcoes_grouped["valor_total"].map(lambda x: f"R$ {x:,.0f}".replace(",", "."))
 
-        tabela_funcoes = df_funcoes_grouped[["descrica_2", "Valor regionalizável orçado"]].rename(
-            columns = {"descrica_2": "Função governamental"})
+        tabela_funcoes = df_funcoes_grouped[["descricao da funcao", "Valor regionalizável orçado"]].rename(
+            columns = {"descricao da funcao": "Função governamental"})
 
         st.dataframe(tabela_funcoes.style.format({"Valor regionalizável orçado": "{:>}"}), height = 400)
 
@@ -423,18 +424,25 @@ st.markdown(f"""
         }}
         .stMainBlockContainer {{
             padding-left: 0;
-        }}
-        .st-emotion-cache-zy6yx3 {{
-            padding: 6rem 0rem 10rem
+            background-color: {colors[4]}
         }}
         .st-key-conteudoPrincipal {{
-            padding: 0 6rem;
+            padding: 6rem 10rem;
+            margin-left: 4rem;
+            background-color: {colors[4]}
         }}
 
-        .st-emotion-cache-f887e0 {{
-            color: white;
+        .st-key-minhaSidebar {{
+            width: 4rem;
         }}
 
+        .st-key-conteudo-sidebar {{
+            color: white
+        }}
+
+        .stAppToolbar {{
+            background-color: {colors[4]}
+        }}
         .st-key-conteudoHeader {{
             position: fixed;
             left: 6rem;
