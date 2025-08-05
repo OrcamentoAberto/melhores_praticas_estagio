@@ -299,7 +299,7 @@ with st.container(key='conteudoPrincipal'):
 
     df["valor_total"] = df[colunas_valores].sum(axis = 1)
 
-    df_total = df[["nm_subpref", "descricao da funcao", "valor_total", "geometry"]].copy()
+    df_total = df[["nm_subpref", "descricao da funcao", "valor_total"]].copy()
 
     top_funcoes = (df_total.groupby("descricao da funcao")[["valor_total"]]
                 .sum()
@@ -331,7 +331,11 @@ with st.container(key='conteudoPrincipal'):
 
             gdf_funcao = df_top3[df_top3["descricao da funcao"] == funcao]
 
+            gdf_funcao = pd.merge(gdf_funcao, gdf_subprefs, on="nm_subpref")
+
+
             gdf_funcao = gdf_funcao.groupby(["nm_subpref", "geometry"]).sum(numeric_only = True).reset_index()
+
 
             gdf_funcao = gpd.GeoDataFrame(gdf_funcao, geometry="geometry", crs = gdf_subprefs.crs)
 
