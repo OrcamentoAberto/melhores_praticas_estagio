@@ -9,6 +9,8 @@ def funcao_merge_dados(
         gdf_subprefs = load_shp("subprefs.shp")
 ):
     
+    gdf_subprefs = gdf_subprefs.drop('geometry', axis=1)
+
     df_ppa_merged = df_ppa_fonte.merge(
         df_ppa_reg,
         left_on = "id",
@@ -56,6 +58,5 @@ def caregar_dados_plusmerge_teste(
     warnings.filterwarnings("ignore", category = RuntimeWarning)
 
     save_shp(gdf_merged, "gdf_merged.shp")
-
 
     return df_ppa_reg, gdf_subprefs, gdf_merged
